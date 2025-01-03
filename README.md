@@ -19,6 +19,7 @@ and higher throughput, contact MAKE for elevated access)
 
 ## Set Up
 1. Clone this repo from GitHub
+2. `npm install`
 2. Copy `.env.example` into `.env` and configure your environment
 3. Provide a base image for your NFT assets
 4. Run this thing! `npm run start`
