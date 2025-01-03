@@ -1,0 +1,12 @@
+[Unit]
+Description=Steuer Node NFT Staking Listener
+After=network-online.target
+
+[Service]
+Restart=always
+WorkingDirectory=/opt/steuer-node-nft
+EnvironmentFile=/etc/steuer-node-listener.conf
+ExecStart=/usr/bin/node /opt/steuer-node-nft/index.js
+
+[Install]
+WantedBy=multi-user.target
