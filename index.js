@@ -12,6 +12,17 @@ const KEYS = Keys.Ed25519.parseKeyFiles(
     `${process.env.KEY_PATH}/secret_key.pem`
 );
 
+this.pingTimeout = 35000;
+
+function heartbeat() {
+    console.log("Heartbeat at " + new Date().toTimeString());
+    clearTimeout(this.pingTimeout);
+    this.pingTimeout = setTimeout(() => {
+        console.log("Heartbeat timeout occured, terminating...");
+        process.exit(1);
+    }, 15000);
+}
+
 async function init() {
 
     console.log("init");
@@ -31,14 +42,14 @@ async function init() {
         async (data) => {
             const rawData = data.toString();
             if (rawData === 'Ping') {
-                //console.log("Received Ping...");
+                heartbeat();
                 return;
             }
 
             try {
                 const event = JSON.parse(rawData);
-                if (event.extra.entry_point_name === "delegate") {
-                    const validator = event.data.args.validator.parsed;
+                if (event.extra.entry_point_name === "delegate" || event.extra.entry_point_name === "redelegate") {
+                    const validator = event.extra.entry_point_name === "delegate" ? event.data.args.validator.parsed : event.data.args.new_validator.parsed;
                     const delegator = event.data.args.delegator.parsed;
                     const motes = BigInt(event.data.args.amount.parsed);
                     const cspr = (motes / BigInt(1000000000)).toLocaleString('en-US', {});
@@ -52,8 +63,14 @@ async function init() {
             }
         });
 
+    ws.on('error', () => {
+        console.log('Error in websocket connection. Terminating.');
+        clearTimeout(this.pingTimeout);
+        process.exit(1);
+    })
     ws.on('close', () => {
         console.log('Disconnected from Streaming API');
+        clearTimeout(this.pingTimeout);
         process.exit(1);
     });
 
