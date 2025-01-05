@@ -51,7 +51,7 @@ async function delegationReceived(delegator, cspr) {
         console.log("OpenAI error");
     });
 
-    if (!image.data.length) { return }
+    if (!image) { return }
 
     console.log("Retrieved Image from OpenAI...");
 
