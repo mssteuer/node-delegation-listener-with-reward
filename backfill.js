@@ -49,8 +49,9 @@ async function delegationReceived(delegator, cspr) {
         response_format: "b64_json"
     }).catch(async(err) => {
         console.log("OpenAI error");
-        return;
     });
+
+    if (!image.data.length) { return }
 
     console.log("Retrieved Image from OpenAI...");
 
