@@ -27,10 +27,10 @@ async function init() {
 
     console.log("init");
 
-    console.log("Connecting to: " + `${process.env.CSPR_CLOUD_URL}deploys?contract_package_hash=${process.env.AUCTION_CONTRACT_PACKAGE}`);
+    console.log("Connecting to: " + `${process.env.CSPR_CLOUD_URL}deploys?contract_package_hash=${process.env.AUCTION_CONTRACT_PACKAGE}&contract_hash=${process.env.AUCTION_CONTRACT}`);
 
     const ws = new WebSocket(
-        `${process.env.CSPR_CLOUD_URL}deploys?contract_package_hash=${process.env.AUCTION_CONTRACT_PACKAGE}`,
+        `${process.env.CSPR_CLOUD_URL}deploys?contract_package_hash=${process.env.AUCTION_CONTRACT_PACKAGE}&contract_hash=${process.env.AUCTION_CONTRACT}`,
         {
             headers: {
                 authorization: process.env.CSPR_CLOUD_API_KEY,
