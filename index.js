@@ -12,7 +12,7 @@ const KEYS = Keys.Ed25519.parseKeyFiles(
     `${process.env.KEY_PATH}/secret_key.pem`
 );
 
-this.pingTimeout = 35000;
+this.pingTimeout = 13000;
 
 function heartbeat() {
     console.log("Heartbeat at " + new Date().toTimeString());
@@ -20,7 +20,7 @@ function heartbeat() {
     this.pingTimeout = setTimeout(() => {
         console.log("Heartbeat timeout occured, terminating...");
         process.exit(1);
-    }, 15000);
+    }, 13000);
 }
 
 async function init() {
@@ -119,7 +119,7 @@ async function delegationReceived(delegator, cspr) {
             collectionName: process.env.NFT_COLLECTION_NAME
         },
         { useSessionCode: false },
-        "1600000000",
+        "1500000000",
         KEYS.publicKey,
         [KEYS]
     );
