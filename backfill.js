@@ -1,5 +1,5 @@
 require("dotenv").config();
-const OpenAI = require("openai");
+const {OpenAI, toFile} = require("openai");
 const fs = require("node:fs");
 const {ObjectManager} = require("@filebase/sdk");
 const openai = new OpenAI();
@@ -43,7 +43,11 @@ async function delegationReceived(delegator, cspr) {
     console.log("Preparing NFT for delegator: " + delegator + " with CSPR stake of: " + cspr);
 
     const image = await openai.images.edit({
-        image: fs.createReadStream(process.env.NFT_IMAGE_PATH),
+        image: await toFile(
+            fs.createReadStream(process.env.NFT_IMAGE_PATH),
+            null,
+            { type: 'image/png' },
+        ),
         prompt: process.env.NFT_IMAGE_PROMPT,
         n: 1,
         response_format: "b64_json"
