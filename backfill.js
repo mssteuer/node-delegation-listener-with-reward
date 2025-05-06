@@ -16,27 +16,38 @@ async function main() {
 
     console.log("checking for backfillable delegations");
 
-    const url =  `${process.env.CSPR_CLOUD_REST_URL}/validators/${process.env.MY_VALIDATOR}/delegations?page_size=500`;
-    const headers = {
-        'Content-Type': 'application/json',
-        'authorization': process.env.CSPR_CLOUD_API_KEY
-    };
+    let pages = 1;
+    let last_page = 0;
 
-    fetch(url, { headers: headers }).then(res => res.json())
-        .then(data => {
-            console.log(data);
-            data.data.forEach(delegation => {
-                // checking if delegator owns NFT
-                const nft_url = `${process.env.CSPR_CLOUD_REST_URL}/accounts/${delegation.public_key}/nft-token-ownership?contract_package_hash=${process.env.NFT_CONTRACT_PACKAGE_HASH.slice(5)}&includes=owner_public_key`;
-                fetch(nft_url, { headers: headers }).then(res => res.json())
-                .then(data => {
-                    if(data.data.length === 0) {
-                        console.log("Backfilling NFT to: " + delegation.public_key);
-                        delegationReceived(delegation.public_key, (BigInt(delegation.stake) / BigInt(1000000000)).toLocaleString('en-US', {}))
-                    }
+    while (last_page <= pages) {
+
+        last_page++;
+
+        const url =  `${process.env.CSPR_CLOUD_REST_URL}/validators/${process.env.MY_VALIDATOR}/delegations?page_size=250&page=${last_page}`;
+        const headers = {
+            'Content-Type': 'application/json',
+            'authorization': process.env.CSPR_CLOUD_API_KEY
+        };
+
+        fetch(url, { headers: headers }).then(res => res.json())
+            .then(data => {
+                console.log(data);
+                pages = data.page_count;
+                data.data.forEach(delegation => {
+                    // checking if delegator owns NFT
+                    const nft_url = `${process.env.CSPR_CLOUD_REST_URL}/accounts/${delegation.public_key}/nft-token-ownership?contract_package_hash=${process.env.NFT_CONTRACT_PACKAGE_HASH.slice(5)}&includes=owner_public_key`;
+                    fetch(nft_url, { headers: headers }).then(res => res.json())
+                        .then(data => {
+                            if(data.data.length === 0) {
+                                console.log("Backfilling NFT to: " + delegation.public_key);
+                                delegationReceived(delegation.public_key, (BigInt(delegation.stake) / BigInt(1000000000)).toLocaleString('en-US', {}))
+                            }
+                        });
                 });
             });
-        });
+
+    }
+
 }
 
 async function delegationReceived(delegator, cspr) {
