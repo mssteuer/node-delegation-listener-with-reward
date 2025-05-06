@@ -16,7 +16,7 @@ async function main() {
 
     console.log("checking for backfillable delegations");
 
-    const url =  `${process.env.CSPR_CLOUD_REST_URL}/validators/${process.env.MY_VALIDATOR}/delegations?page_size=250`;
+    const url =  `${process.env.CSPR_CLOUD_REST_URL}/validators/${process.env.MY_VALIDATOR}/delegations?page_size=500`;
     const headers = {
         'Content-Type': 'application/json',
         'authorization': process.env.CSPR_CLOUD_API_KEY
