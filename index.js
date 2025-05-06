@@ -123,7 +123,7 @@ async function delegationReceived(delegator, cspr) {
             collectionName: process.env.NFT_COLLECTION_NAME
         },
         { useSessionCode: false },
-        "1500000000",
+        "2500000000",
         KEYS.publicKey,
         [KEYS]
     );
