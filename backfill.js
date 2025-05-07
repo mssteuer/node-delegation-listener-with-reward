@@ -38,7 +38,7 @@ async function main() {
                     const nft_url = `${process.env.CSPR_CLOUD_REST_URL}/accounts/${delegation.public_key}/nft-token-ownership?contract_package_hash=${process.env.NFT_CONTRACT_PACKAGE_HASH.slice(5)}&includes=owner_public_key`;
                     fetch(nft_url, { headers: headers }).then(res => res.json())
                         .then(data => {
-                            console.log(data);
+                            // console.log(data);
                             if(data.data.length === 0) {
                                 console.log("Backfilling NFT to: " + delegation.public_key);
                                 delegationReceived(delegation.public_key, (BigInt(delegation.stake) / BigInt(1000000000)).toLocaleString('en-US', {}))
