@@ -31,12 +31,13 @@ async function main() {
 
         fetch(url, { headers: headers }).then(res => res.json())
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 pages = data.page_count;
                 data.data.forEach(delegation => {
                     // checking if delegator owns NFT
                     const nft_url = `${process.env.CSPR_CLOUD_REST_URL}/accounts/${delegation.public_key}/nft-token-ownership?contract_package_hash=${process.env.NFT_CONTRACT_PACKAGE_HASH.slice(5)}&includes=owner_public_key`;
                     fetch(nft_url, { headers: headers }).then(res => res.json())
+                        console.log(data);
                         .then(data => {
                             if(data.data.length === 0) {
                                 console.log("Backfilling NFT to: " + delegation.public_key);
